@@ -60,8 +60,8 @@ function extractAsCSV(){
 fs.createReadStream('business.csv').pipe(csv()).on('data', (row) => {
     if(validationChecker(row.website)){
        row.website =  makeValidUrl(row.website);
-       updatedWebsiteURL.push(row.website);
     }
+    updatedWebsiteURL.push(row.website);
 }).on('end', () => {
     writeToCSVFile();
 })
