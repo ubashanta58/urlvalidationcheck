@@ -3,7 +3,7 @@ const csv = require("csv-parser");
 const updatedWebsiteURL = [];
 
 /**
- *
+ * I have inserted title
  * @param {string} str
  * @returns
  */
@@ -72,8 +72,8 @@ fs.createReadStream("business.csv")
   .pipe(csv())
   .on("data", (row) => {
     if (!validationChecker(row.website)) {
-      row.website = makeValidUrl(row.website);
-      updatedWebsiteURL.push(row.website);
+      const validWebsite = makeValidUrl(row.website);
+      updatedWebsiteURL.push(validWebsite);
     }
   })
   .on("end", () => {
