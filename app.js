@@ -1,6 +1,7 @@
 const fs = require("fs");
 const csv = require("csv-parser");
-const updatedWebsiteURL = [];
+var validUrl = require('valid-url');
+const updatedValidUrl = [];
 
 /**
  * I have inserted title
@@ -43,6 +44,19 @@ function makeValidUrl(str) {
 }
 
 /**
+ * 
+ * @param {string} str 
+ * @returns 
+ */
+function validUrlChecker(str){
+    let returnUrl = false;
+    if(validUrl.isUri(str)){
+        returnUrl = true;
+    }
+    return returnUrl;
+}
+
+/**
  * writeFileToCSV
  */
 function writeToCSVFile() {
@@ -61,8 +75,8 @@ function writeToCSVFile() {
  * @returns concat header and updated URL with "\n"
  */
 function extractAsCSV() {
-  const header = ["Updated Url"];
-  return header.concat(updatedWebsiteURL).join("\n");
+  const header = ["Updated Valid Url"];
+  return header.concat(updatedValidUrl).join("\n");
 }
 
 /**
@@ -72,9 +86,10 @@ fs.createReadStream("business.csv")
   .pipe(csv())
   .on("data", (row) => {
     if (!validationChecker(row.website)) {
-      const validWebsite = makeValidUrl(row.website);
-      updatedWebsiteURL.push(validWebsite);
+      var validWebsite = makeValidUrl(row.website);
     }
+    validUrlChecker(validWebsite);
+    updatedValidUrl.push(validWebsite);
   })
   .on("end", () => {
     writeToCSVFile();
