@@ -1,6 +1,5 @@
 const fs = require("fs");
 const csv = require("csv-parser");
-var validUrl = require('valid-url');
 const updatedValidUrl = [];
 
 /**
@@ -43,18 +42,7 @@ function makeValidUrl(str) {
   return correctURL;
 }
 
-/**
- * 
- * @param {string} str 
- * @returns 
- */
-function validUrlChecker(str){
-    let returnUrl = false;
-    if(validUrl.isUri(str)){
-        returnUrl = true;
-    }
-    return returnUrl;
-}
+
 
 /**
  * writeFileToCSV
@@ -75,7 +63,7 @@ function writeToCSVFile() {
  * @returns concat header and updated URL with "\n"
  */
 function extractAsCSV() {
-  const header = ["Updated Valid Url"];
+  const header = ["UpdatedUrl"];
   return header.concat(updatedValidUrl).join("\n");
 }
 
@@ -86,11 +74,10 @@ fs.createReadStream("business.csv")
   .pipe(csv())
   .on("data", (row) => {
     if (!validationChecker(row.website)) {
-      var validWebsite = makeValidUrl(row.website);
+      row.website = makeValidUrl(row.website);
     }
-    validUrlChecker(validWebsite);
-    updatedValidUrl.push(validWebsite);
+    updatedValidUrl.push(row.website);
   })
   .on("end", () => {
-    writeToCSVFile();
+    writeToCSVFile(updatedValidUrl);
   });
